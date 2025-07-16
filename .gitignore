@@ -1,0 +1,78 @@
+# Editor and OS files
+.DS_Store
+Thumbs.db
+
+# Ignore bundler config
+/.bundle
+/vendor/bundle
+
+# Ignore environment files
+.env
+.env*.local
+/.env*
+
+# Ignore Rails master key and secrets
+/config/master.key
+config/initializers/secret_token.rb
+
+# Logs and tempfiles
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+
+# PIDs
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# Storage (e.g., Active Storage)
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
+/public/uploads
+
+# Compiled assets and builds
+/public/assets
+/public/packs
+/public/packs-test
+/app/assets/builds/*
+
+# Node / Yarn
+node_modules/
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Byebug history
+.byebug_history
+
+# Other Rails generated files
+.rspec
+/coverage/
+/spec/tmp
+
+# DB files (typically SQLite)
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.sqlite3-[0-9]*
+
+# Old asset pipeline and system uploads
+/public/system
+
+# Miscellaneous
+*.rbc
+capybara-*.html
+pickle-email-*.html
+*.orig
+rerun.txt
+
+# Bower (only if used)
+/vendor/assets/bower_components
+*.bowerrc
+bower.json
+
+# Pow environment (optional)
+.powenv
