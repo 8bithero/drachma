@@ -1,28 +1,36 @@
-class Api::V1::AuthController < Api::V1::ApplicationController
+class Api::V1::AuthController < ApplicationController
   skip_before_action :authenticate_user, only: [ :login, :refresh ]
 
   def login
     result = UserLoginService.call(params: login_params)
 
     if result.success?
-      render json: result.value!
+      render json: AuthResponseSerializer.new(result.value!)
     else
-      render json: { error: result.failure }, status: :unauthorized
+      render_error(result.failure)
     end
   end
 
   def logout
-    @current_user.update(refresh_token: nil)
-    render json: { message: "Logged out successfully" }, status: :ok
+    result = UserUpdateService.call(params: {
+      user: @current_user,
+      refresh_token: nil,
+      refresh_token_expires_at: nil
+    })
+    if result.success?
+      render json: { message: "Logged out successfully" }, status: :ok
+    else
+      render_error(result.failure)
+    end
   end
 
   def refresh
     result = TokenRefreshService.call(params: { refresh_token: header_token })
 
     if result.success?
-      render json: result.value!
+      render json: TokenResponseSerializer.new(result.value!)
     else
-      render json: { error: result.failure }, status: :unauthorized
+      render_error(result.failure)
     end
   end
 

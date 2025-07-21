@@ -2,13 +2,7 @@ require "test_helper"
 
 class UserLoginServiceTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(
-      email: "test@example.com",
-      first_name: "Test",
-      last_name: "Testler",
-      password: "password123",
-      password_confirmation: "password123"
-    )
+    @user = users(:homer)
   end
 
   def test_succeeds_with_valid_credentials
@@ -35,7 +29,7 @@ class UserLoginServiceTest < ActiveSupport::TestCase
   end
 
   def test_fails_when_password_is_missing
-    result = UserLoginService.call(params: { email: "test@example.com", password: "" })
+    result = UserLoginService.call(params: { email: @user.email, password: "" })
     assert result.failure?
     assert_includes result.failure, "Password is required"
   end

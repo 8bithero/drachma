@@ -1,23 +1,28 @@
-class Api::V1::UsersController < Api::V1::ApplicationController
+class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_user, only: [ :create ]
 
   def create
     user = User.new(user_params)
     if user.save
-      token = JsonWebToken.encode(user_id: user.id)
-      render json: { token: token, user: user }, status: :created
+      result = UserLoginService.call(params: { email: user_params[:email], password: user_params[:password] })
+
+      if result.success?
+        render json: AuthResponseSerializer.new(result.value!)
+      else
+        render_error(result.failure)
+      end
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: @current_user
+    render json: UserSerializer.new(current_user)
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
   end
 end

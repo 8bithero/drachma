@@ -1,0 +1,42 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  statement: one
+  item_type: MyString
+  category: MyString
+  description: MyString
+  amount_cents: 999
+
+two:
+  statement: two
+  item_type: MyString
+  category: MyString
+  description: MyString
+  amount_cents: 999
+
+homer_salary:
+  statement: homer_july
+  item_type: income
+  category: "Salary"
+  description: "Nuclear Plant Pay"
+  amount_cents: 3000_00
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+homer_beer:
+  statement: homer_july
+  item_type: expenditure
+  category: "Beer"
+  description: "Moe's Tavern Tabs"
+  amount_cents: 25_000
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+marge_groceries:
+  statement: marge_july
+  item_type: expenditure
+  category: "Groceries"
+  description: "Family Groceries"
+  amount_cents: 50_000
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

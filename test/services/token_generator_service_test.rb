@@ -12,7 +12,7 @@ class TokenGeneratorServiceTest < ActiveSupport::TestCase
     assert_equal user_id, data[:user_id]
     assert data[:access_token].present?, "Expected access_token to be present"
     assert data[:refresh_token].present?, "Expected refresh_token to be present"
-    assert data[:refresh_expiry].future?, "Expected refresh_expiry to be in the future"
+    assert data[:refresh_token_expires_at].future?, "Expected refresh_token_expires_at to be in the future"
 
     decoded = JsonWebToken.decode(data[:access_token])
     assert_equal user_id, decoded[:user_id]

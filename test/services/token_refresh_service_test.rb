@@ -2,15 +2,7 @@ require "test_helper"
 
 class TokenRefreshServiceTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(
-      email: "test@example.com",
-      first_name: "Test",
-      last_name: "Testler",
-      password: "password123",
-      password_confirmation: "password123",
-      refresh_token: SecureRandom.hex(32),
-      refresh_token_expires_at: 1.day.from_now
-    )
+    @user = users(:homer)
   end
 
   def test_succeeds_with_valid_refresh_token
@@ -20,6 +12,7 @@ class TokenRefreshServiceTest < ActiveSupport::TestCase
       assert result.success?
 
       data = result.value!
+
       assert_not_nil data[:access_token]
       assert_not_nil data[:refresh_token]
       assert_not_nil data[:refresh_token_expires_at]

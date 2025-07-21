@@ -1,9 +1,29 @@
-<% password_digest = BCrypt::Password.create("password") %>
+<% password_digest = BCrypt::Password.create("password123") %>
 
 one:
+  first_name: One
+  last_name: Onely
   email: one@example.com
   password_digest: <%= password_digest %>
 
 two:
+  first_name: Two
+  last_name: Twoly
   email: two@example.com
   password_digest: <%= password_digest %>
+
+homer:
+  first_name: Homer
+  last_name: Simpson
+  email: homer@springfield.com
+  password_digest: <%= password_digest %>
+  refresh_token: <%= SecureRandom.hex(32) %>
+  refresh_token_expires_at: <%= 1.day.from_now %>
+
+marge:
+  first_name: Marge
+  last_name: Simpson
+  email: marge@springfield.com
+  password_digest: <%= password_digest %>
+  refresh_token: <%= SecureRandom.hex(32) %>
+  refresh_token_expires_at: <%= 1.day.from_now %>

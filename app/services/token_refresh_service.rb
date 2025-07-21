@@ -8,7 +8,6 @@ class TokenRefreshService < BaseService
       .bind { |_| find_user }
       .bind { |user| generate_tokens(user) }
       .bind { |data| update_user_tokens(data) }
-      .fmap { |data| format_response(data) }
   end
 
   private
@@ -32,31 +31,15 @@ class TokenRefreshService < BaseService
   end
 
   def generate_tokens(user)
-    result = TokenGeneratorService.call(params: { user_id: user.id })
-    return result if result.failure?
-
-    token_data = result.value!
-    Success(token_data.merge(user: user))
+    TokenGeneratorService.call(params: { user_id: user.id })
+      .fmap { |token_data| token_data.merge(user: user) }
   end
 
   def update_user_tokens(data)
-    result = UserUpdateService.call(params: {
+    UserUpdateService.call(params: {
       user: data[:user],
       refresh_token: data[:refresh_token],
-      refresh_token_expires_at: data[:refresh_expiry]
-    })
-
-    return result if result.failure?
-
-    updated_user = result.value![:user]
-    Success(data.merge(user: updated_user))
-  end
-
-  def format_response(data)
-    {
-      access_token: data[:access_token],
-      refresh_token: data[:refresh_token],
-      refresh_token_expires_at: data[:refresh_expiry]
-    }
+      refresh_token_expires_at: data[:refresh_token_expires_at]
+    }).fmap { |_| data }
   end
 end

@@ -4,10 +4,8 @@ class TokenGeneratorService < BaseService
   end
 
   def call
-    validation_result = validate_inputs
-    return validation_result if validation_result.failure?
-
-    generate_tokens
+    validate_inputs
+      .bind { |_| generate_tokens }
   end
 
   private
@@ -24,13 +22,13 @@ class TokenGeneratorService < BaseService
   def generate_tokens
     access_token = JsonWebToken.encode(user_id: user_id)
     refresh_token = SecureRandom.hex(32)
-    refresh_expiry = 30.days.from_now
+    refresh_token_expires_at = 30.days.from_now
 
     Success(
       user_id: user_id,
       access_token: access_token,
       refresh_token: refresh_token,
-      refresh_expiry: refresh_expiry
+      refresh_token_expires_at: refresh_token_expires_at
     )
   end
 end

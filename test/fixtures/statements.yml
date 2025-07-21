@@ -1,0 +1,32 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  slug: MyString
+  name: MyString
+
+two:
+  user: two
+  slug: MyString
+  name: MyString
+
+homer_july:
+  user: homer
+  slug: "2025-07"
+  name: "July 2025"
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+homer_august:
+  user: homer
+  slug: "2025-08"
+  name: "August 2025"
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>
+
+marge_july:
+  user: marge
+  slug: "2025-07"
+  name: "July 2025"
+  created_at: <%= Time.current %>
+  updated_at: <%= Time.current %>

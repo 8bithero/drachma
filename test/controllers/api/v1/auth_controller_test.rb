@@ -2,7 +2,7 @@ require "test_helper"
 
 class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user = User.create!(
+      @user = User.create!(
       email: "test@example.com",
       first_name: "Test",
       last_name: "Testler",
@@ -11,6 +11,7 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
       refresh_token: SecureRandom.hex(32),
       refresh_token_expires_at: 1.day.from_now
     )
+    @token = JsonWebToken.encode(user_id: @user.id)
   end
 
   # --------------------------------------------
@@ -48,7 +49,7 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
   # POST /api/v1/auth/refresh
   # --------------------------------------------
   def test_refresh_with_valid_refresh_token
-    post "/api/v1/auth/refresh", headers: { "Authorization" => "Bearer #{@user.refresh_token}" }
+    post "/api/v1/auth/refresh", headers: auth_header(token: @user.refresh_token)
 
     assert_response :success
     json = json_response
@@ -59,7 +60,7 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_refresh_with_invalid_refresh_token
-    post "/api/v1/auth/refresh", headers: { "Authorization" => "Bearer #{SecureRandom.hex(32)}" }
+    post "/api/v1/auth/refresh", headers: auth_header(token: SecureRandom.hex(32))
 
     assert_response :unauthorized
 
@@ -67,7 +68,40 @@ class Api::V1::AuthControllerTest < ActionDispatch::IntegrationTest
     assert json["error"].present?
   end
 
+  # --------------------------------------------
+  # DELETE /api/v1/auth/logout
+  # --------------------------------------------
+  def test_logout_succeeds_with_valid_token
+    delete "/api/v1/auth/logout", headers: auth_header(token: @token)
+
+    assert_response :success
+    json = json_response
+
+    assert_equal "Logged out successfully", json["message"]
+    @user.reload
+    assert_nil @user.refresh_token
+    assert_nil @user.refresh_token_expires_at
+  end
+
+  def test_logout_fails_with_missing_token
+    delete "/api/v1/auth/logout"
+
+    assert_response :unauthorized
+    assert json_response["error"].present?
+  end
+
+  def test_logout_fails_with_invalid_token
+    delete "/api/v1/auth/logout", headers: auth_header(token: SecureRandom.hex(32))
+
+    assert_response :unauthorized
+    assert json_response["error"].present?
+  end
+
   private
+
+  def auth_header(token: @token)
+    { "Authorization" => "Bearer #{token}" }
+  end
 
   def json_response
     JSON.parse(response.body)
