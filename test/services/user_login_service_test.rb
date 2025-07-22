@@ -6,20 +6,22 @@ class UserLoginServiceTest < ActiveSupport::TestCase
   end
 
   def test_succeeds_with_valid_credentials
-    result = UserLoginService.call(params: { email: @user.email, password: "password123" })
-    assert result.success?
+    freeze_time do
+      result = UserLoginService.call(params: { email: @user.email, password: "password123" })
+      assert result.success?
 
-    data = result.value!
-    assert_not_nil data[:access_token]
-    assert_not_nil data[:refresh_token]
-    assert_not_nil data[:refresh_token_expires_at]
+      data = result.value!
+      assert_not_nil data[:access_token]
+      assert_not_nil data[:refresh_token]
+      assert_not_nil data[:refresh_token_expires_at]
 
-    assert data[:refresh_token_expires_at].future?
-    assert_equal @user.id, data[:user][:id]
+      assert data[:refresh_token_expires_at].future?
+      assert_equal @user.id, data[:user][:id]
 
-    @user.reload
-    assert_equal @user.refresh_token, data[:refresh_token]
-    assert_equal @user.refresh_token_expires_at, data[:refresh_token_expires_at]
+      @user.reload
+      assert_equal @user.refresh_token, data[:refresh_token]
+      assert_equal @user.refresh_token_expires_at.round(6), data[:refresh_token_expires_at].round(6)
+    end
   end
 
   def test_fails_when_email_is_missing
