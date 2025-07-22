@@ -1,16 +1,14 @@
-require 'simplecov'
+require "simplecov"
 
-SimpleCov.start 'rails' do
+SimpleCov.start "rails" do
   enable_coverage :branch
 
   SimpleCov.command_name "test:#{Process.pid}"
 
-  add_filter '/test/'
-  add_filter '/config/'
-  add_filter '/db/'
-  add_filter '/lib/tasks/'
-
-  minimum_coverage 1
+  add_filter "/test/"
+  add_filter "/config/"
+  add_filter "/db/"
+  add_filter "/lib/tasks/"
 end
 
 ENV["RAILS_ENV"] ||= "test"
@@ -19,8 +17,7 @@ require "rails/test_help"
 
 module ActiveSupport
   class TestCase
-
-    parallelize(workers: :number_of_processors) unless ENV['COVERAGE']
+    parallelize(workers: :number_of_processors) unless ENV["COVERAGE"]
 
     fixtures :all
   end

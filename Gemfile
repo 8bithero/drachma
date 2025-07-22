@@ -50,5 +50,5 @@ gem "jwt", "~> 3.1"
 gem "dry-monads", "~> 1.9"
 
 group :development, :test do
-  gem 'simplecov', "~> 0.22.0", require: false
+  gem "simplecov", "~> 0.22.0", require: false
 end

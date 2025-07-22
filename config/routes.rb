@@ -10,11 +10,10 @@ Rails.application.routes.draw do
       resources :statements, only: [ :index, :show ], param: :slug do
         resources :line_items, only: [ :create, :index ],
                                param: :statement_slug,
-                               controller: 'statements/line_items'
+                               controller: "statements/line_items"
       end
 
       resources :line_items, only: [ :index, :show, :update, :destroy ]
-
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

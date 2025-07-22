@@ -13,12 +13,12 @@ class Api::V1::Statements::LineItemsControllerTest < ActionDispatch::Integration
   # --------------------------------------------
   def test_create_line_items_success
     params = {
-      line_items: [{
+      line_items: [ {
         item_type: "income",
         category: "Bonus",
         amount_cents: 50_000,
         description: "Year-end bonus"
-      }]
+      } ]
     }
 
     assert_difference -> { LineItem.count }, 1 do
